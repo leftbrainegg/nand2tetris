@@ -95,6 +95,7 @@ outputs = []
 with open('programs/Pong.asm') as f:
     lines = f.readlines()
 
+#Clean up code for parsing and intialize jumping points
 code_counter = 0
 for i, line in enumerate(lines):
     line = cleanup(line)
@@ -107,7 +108,8 @@ for i, line in enumerate(lines):
         lines[i] = ''
     else:
         code_counter += 1
-
+        
+#Parse and translate code to binary
 for line in lines:
     if line == '':
         continue
@@ -120,5 +122,3 @@ for line in lines:
 
 for i in outputs:
     print(i)
-
-#THIS PROGRAM DOES NOT ALLOW FOR SYMBOLS
