@@ -46,7 +46,7 @@ def tobinary(num, length):
     string = add_zero + string
     return string
 
-#CONVERT A C-INSTRUCTION TO BINARY
+#CONVERT A C INSTRUCTION TO BINARY
 def cinstruct (input):
     output = '111'
     c = ''
