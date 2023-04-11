@@ -1,35 +1,27 @@
 def pushCommand(command, segments, filename):
-    if command[1] in segments:
-        asm = f'''//push {command[1]} {command[2]}
-@{command[2]}
+    asm = f'''@{command[2]}
 D=A
 
-@{segments[command[1]]}
+'''
+    
+    if command[1] in segments:
+        asm += f'''@{segments[command[1]]}
 A=D+M
 D=M
 
 '''
 
     elif command[1] == 'constant':
-        asm = f'''//push {command[1]} {command[2]}
-@{command[2]}
-D=A
-
-'''
+        pass
 
     elif command[1] == 'static':
-        asm = f'''//push {command[1]} {command[2]}
-@{filename}.{command[2]}
+        asm = f'''@{filename}.{command[2]}
 D=M
 
 '''
 
     elif command[1] == 'temp':
-        asm = f'''//push {command[1]} {command[2]}
-@{command[2]}
-D=A
-
-@5
+        asm += f'''@5
 A=D+A
 D=M
 
@@ -41,8 +33,7 @@ D=M
         else:
             thisorthat = 'THAT'
 
-        asm = f'''//push {command[1]} {command[2]}
-@{thisorthat}
+        asm = f'''@{thisorthat}
 D=M
 
 '''
@@ -60,8 +51,7 @@ M=M+1'''
 
 def popCommand(command, segments, filename):
     if command[1] in segments:
-        asm = f'''//pop {command[1]} {command[2]}
-@{command[2]}
+        asm = f'''@{command[2]}
 D=A
 
 @{segments[command[1]]}
@@ -79,8 +69,7 @@ A=M
 M=D'''
 
     elif command[1] == 'static':
-        asm = f'''//pop {command[1]} {command[2]}
-@SP
+        asm = f'''@SP
 AM=M-1
 D=M
 
@@ -88,8 +77,7 @@ D=M
 M=D'''
 
     elif command[1] == 'temp':
-        asm = f'''//pop {command[1]} {command[2]}
-@{command[2]}
+        asm = f'''@{command[2]}
 D=A
 
 @5
@@ -112,8 +100,7 @@ M=D'''
         else:
             thisorthat = 'THAT'
 
-        asm = f'''//pop {command[1]} {command[2]}
-@SP
+        asm = f'''@SP
 AM=M-1
 D=M
 
@@ -124,18 +111,19 @@ M=D'''
 
 ################################################################################################
 
-def arithmeticCommand(command, compNum, oneVal, compare, twoVal):
+def arithmeticCommand(command, compNum):
+    oneVal = {'neg': 'M=-M', 'not': 'M=!M'}
+    compare = {'eq': 'D;JEQ', 'lt': 'D;JLT', 'gt': 'D;JGT'}
+    twoVal = {'add': 'M=D+M', 'sub': 'M=M-D', 'or': 'M=D|M', 'and': 'M=D&M'}
 
-    asm = f'''//{command}
-@SP
+    asm = f'''@SP
 AM=M-1
 D=M
 A=A-1
 '''
 
     if command in oneVal:
-        asm = f'''//{command}
-@SP
+        asm = f'''@SP
 A=M-1
 {oneVal[command]}'''
 
